@@ -9,6 +9,10 @@ process.on("unhandledRejection", (reason) => {
   console.error("REJECTION:", reason);
 });
 
+process.on("exit", (code) => {
+  console.log(`Process exit event, code=${code}`);
+});
+
 const dotenv = require("dotenv");
 const { Prisma } = require("@prisma/client");
 const { prisma } = require("./lib/prisma");
@@ -391,6 +395,7 @@ server.on("error", (err) => {
 
 function shutdown(signal) {
   console.log(`${signal}: graceful shutdown (HTTP → Prisma disconnect)`);
+  process.exitCode = 0;
   server.close((closeErr) => {
     if (closeErr) {
       console.error("server.close:", closeErr);
