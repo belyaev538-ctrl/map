@@ -1,5 +1,14 @@
 const path = require("path");
 const express = require("express");
+
+process.on("uncaughtException", (err) => {
+  console.error("UNCAUGHT:", err);
+});
+
+process.on("unhandledRejection", (reason) => {
+  console.error("REJECTION:", reason);
+});
+
 const dotenv = require("dotenv");
 const { Prisma } = require("@prisma/client");
 const { prisma } = require("./lib/prisma");
@@ -389,12 +398,12 @@ console.log("ENV PORT:", process.env.PORT);
 console.log("FINAL PORT:", PORT);
 
 if (!process.env.DATABASE_URL) {
-  console.error("Ошибка: задайте DATABASE_URL (PostgreSQL / Neon).");
-  process.exit(1);
+  console.error("Предупреждение: DATABASE_URL не задан — запросы к БД недоступны до настройки.");
 }
 if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 16) {
-  console.error("Ошибка: задайте JWT_SECRET (не короче 16 символов).");
-  process.exit(1);
+  console.error(
+    "Предупреждение: JWT_SECRET не задан или короче 16 символов — вход/API с токеном не будут работать."
+  );
 }
 
 const server = app.listen(PORT, "0.0.0.0", () => {
@@ -403,13 +412,10 @@ const server = app.listen(PORT, "0.0.0.0", () => {
 
 server.on("error", (err) => {
   if (err && err.code === "EADDRINUSE") {
-    console.error(
-      `Ошибка: порт ${PORT} уже занят. Завершите процесс на этом порту или смените PORT в .env.`
-    );
+    console.error(`Порт ${PORT} занят:`, err.message || err);
   } else {
-    console.error(err);
+    console.error("HTTP server error:", err);
   }
-  process.exit(1);
 });
 
 void prisma
@@ -418,5 +424,5 @@ void prisma
     console.log("DB connected");
   })
   .catch((e) => {
-    console.error("Prisma: не удалось подключиться к базе:", e);
+    console.error("Prisma: не удалось подключиться к базе (повтор при запросах):", e);
   });
