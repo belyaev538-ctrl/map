@@ -32,19 +32,19 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const publicRoot = path.join(__dirname, "public");
 
-app.use(express.json({ limit: "256kb" }));
+app.get("/", (_req, res) => {
+  res.status(200).send("OK");
+});
 
 app.get("/health", (_req, res) => {
-  res.type("text/plain").send("OK");
+  res.status(200).json({ ok: true });
 });
 
 app.get("/babysit", (_req, res) => {
-  res.type("text/plain").send("OK");
+  res.status(200).type("text/plain").send("OK");
 });
 
-app.get("/", (_req, res) => {
-  res.type("text/plain").send("OK");
-});
+app.use(express.json({ limit: "256kb" }));
 
 app.get("/app", (_req, res) => {
   res.sendFile(path.join(publicRoot, "index.html"));
@@ -204,20 +204,6 @@ app.post("/api/project", async (req, res) => {
         const { csvUrl, wasTransformed } = normalizeGoogleSheetsInputToCsvUrl(trimmed);
         finalUrl = csvUrl;
         csvNormalized = wasTransformed;
-        // #region agent log
-        fetch("http://127.0.0.1:7864/ingest/e1ba9522-c743-4e04-9892-5f5116abf45c", {
-          method: "POST",
-          headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "959b78" },
-          body: JSON.stringify({
-            sessionId: "959b78",
-            location: "server.js:POST/api/project",
-            message: "project sheet normalize",
-            data: { csvNormalized, inputLen: trimmed.length, hypothesisId: "C" },
-            timestamp: Date.now(),
-            runId: "sheet-csv-normalize",
-          }),
-        }).catch(() => {});
-        // #endregion
       } catch (e) {
         return res.status(400).json({
           ok: false,
@@ -297,23 +283,8 @@ async function handlePointsRequest(req, res) {
 
   let csvUrl;
   try {
-    const { csvUrl: resolved, wasTransformed } =
-      normalizeGoogleSheetsInputToCsvUrl(rawUrl);
+    const { csvUrl: resolved } = normalizeGoogleSheetsInputToCsvUrl(rawUrl);
     csvUrl = resolved;
-    // #region agent log
-    fetch("http://127.0.0.1:7864/ingest/e1ba9522-c743-4e04-9892-5f5116abf45c", {
-      method: "POST",
-      headers: { "Content-Type": "application/json", "X-Debug-Session-Id": "959b78" },
-      body: JSON.stringify({
-        sessionId: "959b78",
-        location: "server.js:handlePointsRequest",
-        message: "points sheet url resolved",
-        data: { wasTransformed, hypothesisId: "A" },
-        timestamp: Date.now(),
-        runId: "sheet-csv-normalize",
-      }),
-    }).catch(() => {});
-    // #endregion
   } catch (e) {
     return res.status(400).json({
       ok: false,
@@ -417,6 +388,22 @@ server.on("error", (err) => {
     console.error("HTTP server error:", err);
   }
 });
+
+function shutdown(signal) {
+  console.log(`${signal}: graceful shutdown (HTTP → Prisma disconnect)`);
+  server.close((closeErr) => {
+    if (closeErr) {
+      console.error("server.close:", closeErr);
+    }
+    void prisma
+      .$disconnect()
+      .catch((e) => console.error("prisma.$disconnect:", e))
+      .finally(() => process.exit(0));
+  });
+}
+
+process.on("SIGTERM", () => shutdown("SIGTERM"));
+process.on("SIGINT", () => shutdown("SIGINT"));
 
 void prisma
   .$connect()
