@@ -378,7 +378,7 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 16) {
 }
 
 const server = app.listen(PORT, "0.0.0.0", () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT} (process.env.PORT from Railway/host)`);
 });
 
 server.on("error", (err) => {
@@ -409,6 +409,7 @@ void prisma
   .$connect()
   .then(() => {
     console.log("DB connected");
+    console.log("Startup complete.");
   })
   .catch((e) => {
     console.error("Prisma: не удалось подключиться к базе (повтор при запросах):", e);
