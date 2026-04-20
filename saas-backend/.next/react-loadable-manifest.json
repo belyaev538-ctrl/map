@@ -1,0 +1,16 @@
+{
+  "components/field-map/field-cluster-layer.tsx -> leaflet.markercluster": {
+    "id": 4840,
+    "files": [
+      "static/chunks/840.f5adefca9b0d6f6a.js"
+    ]
+  },
+  "components/field-map/field-project-view.tsx -> ./field-map-inner": {
+    "id": 8592,
+    "files": [
+      "static/css/d06fe514b27d96f4.css",
+      "static/chunks/d0deef33.bd75b11a952a2d3d.js",
+      "static/chunks/592.13e4145b0f0f1a54.js"
+    ]
+  }
+}

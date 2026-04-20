@@ -1,0 +1,138 @@
+/**
+ * Минимальные стили для Яндекс.Карт (балуны, легенда внутри балуна) и динамического legend.
+ * Остальной UI — Tailwind в разметке.
+ */
+.map-balloon {
+  min-width: 200px;
+  max-width: 280px;
+  padding: 2px 0 4px;
+  font-size: 14px;
+  line-height: 1.35;
+}
+
+.map-balloon__title {
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.map-balloon__row {
+  color: #64748b;
+  margin-bottom: 8px;
+}
+
+.map-balloon__status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 0;
+}
+
+.map-balloon__label {
+  font-size: 12px;
+  color: #64748b;
+}
+
+.map-balloon__value {
+  flex: 1;
+  min-width: 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #0a0a0a;
+}
+
+.map-balloon__status .map-balloon__value {
+  color: #000000;
+  font-weight: 700;
+}
+
+.map-balloon__extra {
+  margin-bottom: 8px;
+}
+
+.map-balloon__extra .map-balloon__label {
+  display: inline-block;
+  min-width: 1.25em;
+  margin-right: 6px;
+  vertical-align: top;
+}
+
+.map-balloon__extra-value {
+  display: inline-block;
+  max-width: 100%;
+  vertical-align: top;
+  word-break: break-word;
+  color: #64748b;
+  font-size: 13px;
+}
+
+.map-legend-inner {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 12px;
+  align-items: center;
+  font-size: 12px;
+  color: #0a0a0a;
+}
+
+.map-legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.map-legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.checkbox-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  user-select: none;
+  color: #e2e8f0;
+}
+
+/* Панель статусов — светлый фон, чёрный текст подписей. */
+#map-bottom-panel .checkbox-label {
+  color: #000000;
+}
+
+#map-bottom-panel .checkbox-label span:not(.dot) {
+  color: inherit;
+}
+
+.checkbox-label input {
+  width: 1rem;
+  height: 1rem;
+  flex-shrink: 0;
+  accent-color: #2563eb;
+}
+
+#legend {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#legend li {
+  display: inline-flex;
+  align-items: center;
+}
+
+#legend li .checkbox-label {
+  margin: 0;
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  display: inline-block;
+  flex-shrink: 0;
+}

@@ -1,0 +1,99 @@
+// CRM на карте — PostgreSQL (Neon) + Prisma
+// Расширение: workspace/команды, квоты тарифа, аналитика — отдельные модели и миграции.
+//
+// npx prisma migrate dev
+// npx prisma db seed
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  createdAt DateTime @default(now())
+
+  projects          Project[]
+  comments          Comment[]
+  assignedLocations Location[] @relation("LocationAssignee")
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  name      String
+  userId    String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+  locations Location[]
+
+  @@index([userId])
+  @@index([userId, updatedAt(sort: Desc)])
+}
+
+/// Глобальный справочник статусов (ключ стабилен для API и сидов).
+model Status {
+  id    String @id @default(cuid())
+  key   String @unique
+  name  String
+  color String
+  /// Порядок в UI и сиде (колонка в БД `order`).
+  sortOrder Int    @default(0) @map("order")
+
+  locations Location[]
+
+  @@index([sortOrder])
+}
+
+model Location {
+  id        String    @id @default(cuid())
+  name      String
+  address   String    @default("")
+  lat       Decimal   @db.Decimal(10, 7)
+  lng       Decimal   @db.Decimal(10, 7)
+  statusId  String
+  projectId String
+  assignedToId String?
+  nextVisitAt  DateTime?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  project    Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  status     Status  @relation(fields: [statusId], references: [id], onDelete: Restrict)
+  assignee   User?   @relation("LocationAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  comments   Comment[]
+
+  /// Ключсет-пагинация и выборки по проекту
+  @@index([projectId])
+  @@index([projectId, statusId])
+  @@index([projectId, assignedToId])
+  @@index([projectId, nextVisitAt])
+  @@index([statusId])
+  @@index([assignedToId])
+  /// Под bbox без PostGIS (до внедрения geography + GiST)
+  @@index([projectId, lat])
+  @@index([projectId, lng])
+  @@index([projectId, createdAt(sort: Desc), id(sort: Desc)])
+}
+
+model Comment {
+  id         String   @id @default(cuid())
+  text       String   @db.Text
+  locationId String
+  userId     String
+  createdAt  DateTime @default(now())
+
+  location Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([locationId])
+  @@index([userId])
+  @@index([locationId, createdAt(sort: Desc)])
+}
