@@ -10,3 +10,5 @@ node_modules/
 # Логи / ОС
 .DS_Store
 *.log
+
+saas-backend/.next/

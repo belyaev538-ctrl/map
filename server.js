@@ -377,6 +377,8 @@ async function fetchCsvData(csvUrl) {
 }
 
 console.log("Starting server...");
+console.log("ENV PORT:", process.env.PORT);
+console.log("FINAL PORT:", PORT);
 
 if (!process.env.DATABASE_URL) {
   console.error("Ошибка: задайте DATABASE_URL (PostgreSQL / Neon).");
@@ -388,7 +390,7 @@ if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 16) {
 }
 
 const server = app.listen(PORT, "0.0.0.0", () => {
-  console.log("Listening on", PORT);
+  console.log(`Server running on port ${PORT}`);
 });
 
 server.on("error", (err) => {
