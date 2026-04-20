@@ -20,7 +20,7 @@ const {
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = Number(process.env.PORT) || 3000;
 const publicRoot = path.join(__dirname, "public");
 
 app.use(express.json({ limit: "256kb" }));
@@ -385,8 +385,8 @@ async function start() {
   await prisma.$connect();
   console.log("DB connected");
 
-  const server = app.listen(PORT, () => {
-    console.log(`Service is running on http://localhost:${PORT}`);
+  const server = app.listen(PORT, "0.0.0.0", () => {
+    console.log("Service is running on port", PORT);
   });
 
   server.on("error", (err) => {
