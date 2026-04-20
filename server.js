@@ -25,6 +25,10 @@ const publicRoot = path.join(__dirname, "public");
 
 app.use(express.json({ limit: "256kb" }));
 
+app.get("/health", (_req, res) => {
+  res.type("text/plain").send("OK");
+});
+
 app.get("/", (_req, res) => {
   res.sendFile(path.join(publicRoot, "index.html"));
 });
@@ -372,36 +376,37 @@ async function fetchCsvData(csvUrl) {
   return response.text();
 }
 
-async function start() {
-  if (!process.env.DATABASE_URL) {
-    console.error("Ошибка: задайте DATABASE_URL (PostgreSQL / Neon).");
-    process.exit(1);
-  }
-  if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 16) {
-    console.error("Ошибка: задайте JWT_SECRET (не короче 16 символов).");
-    process.exit(1);
-  }
+console.log("Starting server...");
 
-  await prisma.$connect();
-  console.log("DB connected");
-
-  const server = app.listen(PORT, "0.0.0.0", () => {
-    console.log("Service is running on port", PORT);
-  });
-
-  server.on("error", (err) => {
-    if (err && err.code === "EADDRINUSE") {
-      console.error(
-        `Ошибка: порт ${PORT} уже занят. Завершите процесс на этом порту или смените PORT в .env.`
-      );
-    } else {
-      console.error(err);
-    }
-    process.exit(1);
-  });
+if (!process.env.DATABASE_URL) {
+  console.error("Ошибка: задайте DATABASE_URL (PostgreSQL / Neon).");
+  process.exit(1);
+}
+if (!process.env.JWT_SECRET || process.env.JWT_SECRET.length < 16) {
+  console.error("Ошибка: задайте JWT_SECRET (не короче 16 символов).");
+  process.exit(1);
 }
 
-start().catch((e) => {
-  console.error(e);
+const server = app.listen(PORT, "0.0.0.0", () => {
+  console.log("Listening on", PORT);
+});
+
+server.on("error", (err) => {
+  if (err && err.code === "EADDRINUSE") {
+    console.error(
+      `Ошибка: порт ${PORT} уже занят. Завершите процесс на этом порту или смените PORT в .env.`
+    );
+  } else {
+    console.error(err);
+  }
   process.exit(1);
 });
+
+void prisma
+  .$connect()
+  .then(() => {
+    console.log("DB connected");
+  })
+  .catch((e) => {
+    console.error("Prisma: не удалось подключиться к базе:", e);
+  });
