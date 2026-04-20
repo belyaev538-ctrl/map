@@ -47,7 +47,7 @@ function setBanner(text, kind) {
 
 function bootstrap() {
   if (localStorage.getItem(LS_JWT_KEY)) {
-    window.location.replace("/");
+    window.location.replace("/app");
     return;
   }
 
@@ -85,7 +85,7 @@ function bootstrap() {
         if (data.email) {
           localStorage.setItem(LS_EMAIL_KEY, data.email);
         }
-        window.location.replace("/");
+        window.location.replace("/app");
       }
     } catch {
       setBanner("Сеть недоступна", "error");

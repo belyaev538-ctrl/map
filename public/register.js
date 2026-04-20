@@ -46,7 +46,7 @@ function setBanner(text, kind) {
 
 function bootstrap() {
   if (localStorage.getItem(LS_JWT_KEY)) {
-    window.location.replace("/");
+    window.location.replace("/app");
     return;
   }
 

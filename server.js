@@ -29,7 +29,15 @@ app.get("/health", (_req, res) => {
   res.type("text/plain").send("OK");
 });
 
+app.get("/babysit", (_req, res) => {
+  res.type("text/plain").send("OK");
+});
+
 app.get("/", (_req, res) => {
+  res.type("text/plain").send("OK");
+});
+
+app.get("/app", (_req, res) => {
   res.sendFile(path.join(publicRoot, "index.html"));
 });
 
