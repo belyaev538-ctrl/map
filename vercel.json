@@ -1,6 +1,1 @@
-{
-  "routes": [
-    { "src": "^/login$", "dest": "/login.html" },
-    { "src": "^/register$", "dest": "/register.html" }
-  ]
-}
+{}
