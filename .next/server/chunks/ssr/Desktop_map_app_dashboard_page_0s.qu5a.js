@@ -1,0 +1,3 @@
+module.exports=[99113,a=>{"use strict";var b=a.i(2759),c=a.i(37602);a.s(["default",0,function(){return(0,c.useEffect)(()=>{localStorage.getItem("token")||localStorage.getItem("sheet_map_jwt_v1")?window.location.replace("/index.html"):window.location.replace("/login")},[]),(0,b.jsx)("main",{className:"page",children:(0,b.jsx)("section",{className:"card",children:(0,b.jsx)("h1",{className:"title",children:"Переход в кабинет..."})})})}])}];
+
+//# sourceMappingURL=Desktop_map_app_dashboard_page_0s.qu5a.js.map

@@ -21,6 +21,10 @@ export default function LoginPage() {
 
     if (data.token) {
       localStorage.setItem("token", data.token);
+      localStorage.setItem("sheet_map_jwt_v1", data.token);
+      if (data.email) {
+        localStorage.setItem("sheet_map_email_v1", data.email);
+      }
       router.push("/dashboard");
     } else {
       alert("Ошибка логина");
