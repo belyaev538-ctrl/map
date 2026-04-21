@@ -4,6 +4,9 @@
   "description": "Local service that renders Yandex map points from Google Sheets",
   "main": "api/index.js",
   "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate deploy",
     "db:push": "prisma db push",
@@ -16,6 +19,9 @@
     "bcryptjs": "^2.4.3",
     "dotenv": "^16.4.5",
     "jsonwebtoken": "^9.0.2",
-    "prisma": "^6.19.0"
+    "next": "^16.0.0",
+    "prisma": "^6.19.0",
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
   }
 }
