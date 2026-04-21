@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function RegisterPage() {
   const router = useRouter();
@@ -36,21 +37,29 @@ export default function RegisterPage() {
   return (
     <main className="page">
       <section className="card">
-      <h1 className="title">Register</h1>
+      <h1 className="title">Регистрация</h1>
       <p className="muted">Создайте новый аккаунт.</p>
       <form onSubmit={onRegister} className="form">
+        <label className="label" htmlFor="email">
+          Email
+        </label>
         <input
+          id="email"
           className="input"
           type="email"
-          placeholder="Email"
+          placeholder="email@example.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
+        <label className="label" htmlFor="password">
+          Пароль
+        </label>
         <input
+          id="password"
           className="input"
           type="password"
-          placeholder="Password"
+          placeholder="Минимум 8 символов"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
@@ -60,6 +69,9 @@ export default function RegisterPage() {
         </button>
       </form>
       {error ? <p className="error">{error}</p> : null}
+      <p className="row">
+        Уже есть аккаунт? <Link className="link" href="/login">Войти</Link>
+      </p>
       </section>
     </main>
   );

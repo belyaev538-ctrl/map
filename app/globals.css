@@ -44,6 +44,14 @@ body {
   gap: 12px;
 }
 
+.label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  margin-bottom: 6px;
+  display: block;
+}
+
 .input {
   width: 100%;
   border: 1px solid #d1d5db;
@@ -80,4 +88,14 @@ body {
 .link {
   color: #2563eb;
   text-decoration: none;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.row {
+  margin-top: 14px;
+  font-size: 14px;
+  color: #4b5563;
 }
