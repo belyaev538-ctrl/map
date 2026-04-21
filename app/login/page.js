@@ -3,8 +3,6 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-const LS_JWT_KEY = "sheet_map_jwt_v1";
-
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
@@ -27,7 +25,7 @@ export default function LoginPage() {
         setError(typeof data.error === "string" ? data.error : "Login failed");
         return;
       }
-      localStorage.setItem(LS_JWT_KEY, data.token);
+      localStorage.setItem("token", data.token);
       router.push("/dashboard");
     } catch {
       setError("Network error");
