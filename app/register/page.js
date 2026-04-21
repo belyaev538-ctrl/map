@@ -34,10 +34,13 @@ export default function RegisterPage() {
   }
 
   return (
-    <main style={{ padding: 24, fontFamily: "Arial, sans-serif", maxWidth: 420 }}>
-      <h1>Register</h1>
-      <form onSubmit={onRegister} style={{ display: "grid", gap: 12 }}>
+    <main className="page">
+      <section className="card">
+      <h1 className="title">Register</h1>
+      <p className="muted">Создайте новый аккаунт.</p>
+      <form onSubmit={onRegister} className="form">
         <input
+          className="input"
           type="email"
           placeholder="Email"
           value={email}
@@ -45,17 +48,19 @@ export default function RegisterPage() {
           required
         />
         <input
+          className="input"
           type="password"
           placeholder="Password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
           required
         />
-        <button type="submit" disabled={loading}>
+        <button className="button" type="submit" disabled={loading}>
           {loading ? "Loading..." : "Register"}
         </button>
       </form>
-      {error ? <p style={{ color: "crimson" }}>{error}</p> : null}
+      {error ? <p className="error">{error}</p> : null}
+      </section>
     </main>
   );
 }

@@ -54,24 +54,27 @@ export default function DashboardPage() {
   }
 
   return (
-    <main style={{ padding: 24, fontFamily: "Arial, sans-serif", maxWidth: 560 }}>
-      <h1>Dashboard</h1>
-      <p>Dashboard</p>
+    <main className="page">
+      <section className="card" style={{ maxWidth: 560 }}>
+      <h1 className="title">Dashboard</h1>
+      <p className="muted">Сохраните ссылку на Google Sheets проекта.</p>
 
-      <form onSubmit={saveProject} style={{ display: "grid", gap: 12, marginTop: 16 }}>
+      <form onSubmit={saveProject} className="form">
         <input
+          className="input"
           type="url"
           placeholder="Google Sheets URL"
           value={sheetUrl}
           onChange={(e) => setSheetUrl(e.target.value)}
           required
         />
-        <button type="submit" disabled={saving}>
+        <button className="button" type="submit" disabled={saving}>
           {saving ? "Saving..." : "Save project"}
         </button>
       </form>
 
-      {message ? <p>{message}</p> : null}
+      {message ? <p className={message === "Project saved" ? "success" : "error"}>{message}</p> : null}
+      </section>
     </main>
   );
 }
