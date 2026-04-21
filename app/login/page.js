@@ -4,59 +4,39 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function LoginPage() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const router = useRouter();
 
-  async function onLogin(e) {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-    try {
-      const res = await fetch("/api/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || typeof data.token !== "string") {
-        setError(typeof data.error === "string" ? data.error : "Login failed");
-        return;
-      }
+  const handleLogin = async () => {
+    const res = await fetch("/api/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ email, password }),
+    });
+
+    const data = await res.json();
+
+    if (data.token) {
       localStorage.setItem("token", data.token);
       router.push("/dashboard");
-    } catch {
-      setError("Network error");
-    } finally {
-      setLoading(false);
+    } else {
+      alert("Ошибка логина");
     }
-  }
+  };
 
   return (
-    <main style={{ padding: 24, fontFamily: "Arial, sans-serif", maxWidth: 420 }}>
+    <div style={{ padding: 40 }}>
       <h1>Login</h1>
-      <form onSubmit={onLogin} style={{ display: "grid", gap: 12 }}>
-        <input
-          type="email"
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit" disabled={loading}>
-          {loading ? "Loading..." : "Login"}
-        </button>
-      </form>
-      {error ? <p style={{ color: "crimson" }}>{error}</p> : null}
-    </main>
+      <input placeholder="email" onChange={(e) => setEmail(e.target.value)} />
+      <br />
+      <br />
+      <input type="password" placeholder="password" onChange={(e) => setPassword(e.target.value)} />
+      <br />
+      <br />
+      <button onClick={handleLogin}>Login</button>
+    </div>
   );
 }
